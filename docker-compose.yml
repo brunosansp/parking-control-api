@@ -1,0 +1,44 @@
+version: "3.7"
+services:
+  # =================================================
+  # POSTGRES SERVER
+  # =================================================
+  pg-docker:
+    user: root
+    image: postgres:14-alpine
+    container_name: dev-postgresql-parking
+    environment:
+      POSTGRES_DB: parking-control-db
+      POSTGRES_PASSWORD: banco123
+    ports:
+      - 5433:5432
+    volumes:
+      - ./.data/postgresql/data:/var/lib/postgresql/data
+    networks:
+      - dev-network
+
+  # =================================================
+  # POSTGRES PGADMIN
+  # =================================================
+  pgadmin-docker:
+    user: root
+    image: dpage/pgadmin4
+    container_name: dev-pgadmin-parking
+    environment:
+      PGADMIN_DEFAULT_EMAIL: me@example.com
+      PGADMIN_DEFAULT_PASSWORD: banco123
+    ports:
+      - 5050:80
+    volumes:
+      - ./.data/pgadmin:/var/lib/pgadmin
+    depends_on:
+      - pg-docker
+    networks:
+      - dev-network
+
+# =================================================
+# REDE
+# =================================================
+networks:
+  dev-network:
+    driver: bridge
